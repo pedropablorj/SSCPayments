@@ -58,11 +58,11 @@ Use SSCPayments.postman_collection.json file.
 
 ## Response Codes
 
-**200** -- The request has seccede with data response.
-**400** -- The server couldn't made the request because the input or is bad genereted.
-**401** -- Unauthorize.
-**404** -- The server has not found anything for an specific resquest.
-**500** -- Unexpected error in the server.
++ **200** -- The request has seccede with data response.
++ **400** -- The server couldn't made the request because the input or is bad genereted.
++ **401** -- Unauthorize.
++ **404** -- The server has not found anything for an specific resquest.
++ **500** -- Unexpected error in the server.
 
 ---
 
