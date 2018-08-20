@@ -78,9 +78,23 @@ app.get('/account/:id/statement',
             .then(account => {
                 return account.operations();
             })
-            .then(operations => { console.lof
-                return res.status(200).json({
-                });
+            .then(operations => {
+                return res.status(200).json(operations.records.map(el => {
+                    const from = (el.type_i) ? el.from : el.funder;
+                    const to = (el.type_i) ? el.to : el.account;
+                    const fee = (!el.type_i) ? '0.0000000' : (to === accountId) ? '0.0000000' : '-0.0000100';
+                    const amount = (!el.type_i) ? el.starting_balance : (to === accountId) ? el.amount : `-${el.amount}`;
+
+                    return {
+                        id: el.transaction_hash,
+                        type: el.type,
+                        amount: amount,
+                        fee: fee,
+                        from: from,
+                        to: to,
+                        created_at: el.created_at
+                    }
+                }));
             })
             .catch(e => {
                 return res.status('500').json({
@@ -146,7 +160,7 @@ app.post('/payment',
                     id: result.hash,
                     status: 'approved',
                     amount: amount,
-                    fee: '0.00001'
+                    fee: '0.0000100'
                 });
             })
             .catch(e => {
