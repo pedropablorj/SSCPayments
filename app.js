@@ -4,6 +4,7 @@ const bodyParser = require('body-parser');
 const passport = require('passport');
 const Strategy = require('passport-http-bearer').Strategy;
 const app = express();
+const decimals = require('./helpers/helpers').decimals;
 
 //Initializing Stellar blockchain client
 const stellarServer = new StellarSdk.Server('https://horizon-testnet.stellar.org');
@@ -77,7 +78,7 @@ app.get('/account/:id/statement',
             .then(account => {
                 return account.operations();
             })
-            .then(operations => {
+            .then(operations => { console.lof
                 return res.status(200).json({
                 });
             })
@@ -97,7 +98,7 @@ app.post('/payment',
         const { public: publicKeySource, secret: secretKeySource } = req.user;
         const { amount, receiver, source } = req.body;
 
-        if((!amount || typeof amount !== 'number') || !receiver || !source) {
+        if((!amount || typeof amount !== 'string' || typeof parseFloat(amount) !== 'number' || decimals(amount) > 7) || !receiver || !source) {
             return res.status('400').json({
                 status: '400',
                 code: 'BAD REQUEST',
@@ -117,7 +118,7 @@ app.post('/payment',
             .then(receiverAccount => stellarServer.loadAccount(source))
             .then(sourceAccount => {
                 const sourceBalance = parseFloat(sourceAccount.balances[0].balance);
-                if(amount > balance) {
+                if(parseFloat(amount) > sourceBalance) {
                     return res.status('400').json({
                         status: '400',
                         code: 'BAD REQUEST',
@@ -126,7 +127,27 @@ app.post('/payment',
                 }
 
                 //Building SSC transaction
+                const transaction = new StellarSdk.TransactionBuilder(sourceAccount)
+                    .addOperation(StellarSdk.Operation.payment({
+                        destination: receiver,
+                        asset: StellarSdk.Asset.native(),
+                        amount: amount
+                    }))
+                    .build();
 
+                //Signing the transaction
+                transaction.sign(StellarSdk.Keypair.fromSecret(secretKeySource));
+
+                //Submit the transaction on the network
+                return stellarServer.submitTransaction(transaction)
+            })
+            .then(result => {
+                return res.status(200).json({
+                    id: result.hash,
+                    status: 'approved',
+                    amount: amount,
+                    fee: '0.00001'
+                });
             })
             .catch(e => {
                 const { status } = e.response;
