@@ -1,5 +1,5 @@
 {
-  "name": "system-transactions",
+  "name": "ssc-payments",
   "version": "1.0.0",
   "description": "Money transactions test using SSC",
   "main": "index.js",
