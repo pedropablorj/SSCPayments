@@ -13,7 +13,7 @@
 					"bearer": [
 						{
 							"key": "token",
-							"value": "abc123",
+							"value": "6CA13D52CA70C883E0F0BB101E425A89E8624DE51DB2D2392593AF6A84118090",
 							"type": "string"
 						}
 					]
@@ -45,7 +45,7 @@
 					"bearer": [
 						{
 							"key": "token",
-							"value": "abc123",
+							"value": "6CA13D52CA70C883E0F0BB101E425A89E8624DE51DB2D2392593AF6A84118090",
 							"type": "string"
 						}
 					]
@@ -77,7 +77,7 @@
 					"bearer": [
 						{
 							"key": "token",
-							"value": "abc123",
+							"value": "6CA13D52CA70C883E0F0BB101E425A89E8624DE51DB2D2392593AF6A84118090",
 							"type": "string"
 						}
 					]
